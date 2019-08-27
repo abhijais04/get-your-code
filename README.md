@@ -9,14 +9,14 @@ A python tool to download your acccepted solutions of problems from various comp
 - Open command line
 - Run following command
  ```
-	pip install -r requirements.txt
-```
+ 	pip install -r requirements.txt
+ ```
 ### Usage
 
 - Go to the main source folder and run following command:
-```
-	python spoj-downloader.py
-```
+ ```
+ 	python spoj-downloader.py
+ ```
 - Enter you Spoj credentials.
 - Voila ! Your latest accepted solutions will be downloaded to ```{current_working_directory}/Spoj```.
 
