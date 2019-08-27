@@ -92,8 +92,8 @@ def downloadAllSolutions():
     # get list of all solved problems for the given user
     solvedProblemList = getSolvedProblemLinksOfUser(baseurl, username)
 
-    # Path to save the code (Change this to you local path)
-    save_directory = "/home/abhijais/Documents/Coding_Practice/Competitive-Programming/Spoj"
+    # Path to save the code
+    save_directory = os.getcwd() + os.path.sep  + "Spoj"
     
     # Create directory if it's not there
     if not os.path.exists(save_directory):
