@@ -1,10 +1,3 @@
-'''
-To-do
-    Add login check
-    make extensible using design pattern
-    add progress bar
-'''
-
 import os
 from mechanize import Browser
 import urllib2
@@ -12,6 +5,10 @@ import traceback
 from BeautifulSoup import BeautifulSoup
 from getpass import getpass
 
+def verfiyLogin(resp):
+    if "Authentication failed" in str(resp):
+        raise Exception("Login Failed")
+    return 
 
 def login(url, username, password):
     try:
@@ -22,12 +19,11 @@ def login(url, username, password):
         b["password"] = password
         b.submit()
         response = b.response().read()
-        if username in response:
-            print("Logged in!")
+        verfiyLogin(response)
     except:
-        print("Error while logging in !!! ")
+        # print(e)
         traceback.print_exc()
-        raise
+        raise 
     return b
 
 def downloadFile(br, siteUrl, filename):
@@ -57,25 +53,31 @@ def getSolvedProblemLinksOfUser(baseurl, username):
     
     # extracting problem codes from /status/problem_code, username/
     all_codes = [str(s.split('/')[2].split(',')[0]) for s in all_links]
+    if len(all_codes) < 1:
+        raise Exception("No Solved problem found for this user")
     return all_codes
 
 
 def getDownloadLinkForProblem(baseurl, br , username, problemCode):
-
-    url = baseurl + "/status/" + str(problemCode) + "," + str(username) + "/"
-    html = br.open(url).read()
-    html = BeautifulSoup(html)
-    problemStatusTable = html.body.find('table', attrs={'class':'problems table newstatus'})
-    rows = problemStatusTable.find('tbody').findAll('tr')
-    res = None
-    for row in rows:
-        status = row.find('td', attrs={'class':'statusres text-center'}).findAll("strong")[0].text
-        id = row.find('td', attrs={'class':'statustext text-center'}).find('a').text
-        if status == "accepted":
-            res = "https://www.spoj.com/files/src/save/" + id + "/"
-            break
     
-    # print(res)
+    try:
+        url = baseurl + "/status/" + str(problemCode) + "," + str(username) + "/"
+        html = br.open(url).read()
+        html = BeautifulSoup(html)
+        problemStatusTable = html.body.find('table', attrs={'class':'problems table newstatus'})
+        rows = problemStatusTable.find('tbody').findAll('tr')
+        res = None
+        for row in rows:
+            status = row.find('td', attrs={'class':'statusres text-center'}).findAll("strong")[0].text
+            id = row.find('td', attrs={'class':'statustext text-center'}).find('a').text
+            if status == "accepted":
+                res = "https://www.spoj.com/files/src/save/" + id + "/"
+                break
+        if res == None:
+            raise Exception("Accepted solution not found for code: " + str(problemCode))
+        
+    except:
+        raise
     return res
 
 
@@ -83,22 +85,20 @@ def downloadAllSolutions():
     baseurl = "https://www.spoj.com"
     username = raw_input("Enter usrename: ")
     password = getpass()
-    save_directory = str(os.getcwd()) + os.path.sep + "Spoj"
-
-    # Create directory if it's not there
-    if not os.path.exists(save_directory):
-        os.mkdir(save_directory)
-    
-    try:
-        # login with given usrname and password
-        br = login(baseurl, username, password)
-    except:
-        print("Login failed !!!!! ")
-        return 
+        
+    # login with given usrname and password
+    br = login(baseurl, username, password)
 
     # get list of all solved problems for the given user
     solvedProblemList = getSolvedProblemLinksOfUser(baseurl, username)
 
+    # Path to save the code (Change this to you local path)
+    save_directory = "/home/abhijais/Documents/Coding_Practice/Competitive-Programming/Spoj"
+    
+    # Create directory if it's not there
+    if not os.path.exists(save_directory):
+        os.mkdir(save_directory)
+    
     # download solution for each of them
     counter = 0 
     total = len(solvedProblemList)
