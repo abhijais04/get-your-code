@@ -39,6 +39,16 @@ def printObject(obj):
     for att in dir(obj):
         print (att, getattr(obj,att))
 
+def getExtension(lang):
+    if "cpp" in lang or "CPP" in lang:
+        return ".cpp"
+    if "java" in lang or "JAVA" in lang:
+        return ".java"
+    if "py" in lang or "PY" in lang:
+        return ".py"
+    if lang == "c" or lang == "C":
+        return ".c"
+    return ".txt"
 
 def getSolvedProblemLinksOfUser(baseurl, username):
     # Profile page for Spoj.com
@@ -67,18 +77,21 @@ def getDownloadLinkForProblem(baseurl, br , username, problemCode):
         problemStatusTable = html.body.find('table', attrs={'class':'problems table newstatus'})
         rows = problemStatusTable.find('tbody').findAll('tr')
         res = None
+        extension = None
         for row in rows:
             status = row.find('td', attrs={'class':'statusres text-center'}).findAll("strong")[0].text
             id = row.find('td', attrs={'class':'statustext text-center'}).find('a').text
+            lang = row.find('td', attrs={'class':'slang text-center'}).text
             if status == "accepted":
                 res = "https://www.spoj.com/files/src/save/" + id + "/"
+                extension = getExtension(lang)
                 break
         if res == None:
             raise Exception("Accepted solution not found for code: " + str(problemCode))
         
     except:
         raise
-    return res
+    return res, extension
 
 
 def downloadAllSolutions():
@@ -94,21 +107,19 @@ def downloadAllSolutions():
 
     # Path to save the code
     save_directory = os.getcwd() + os.path.sep  + "Spoj"
-    
     # Create directory if it's not there
     if not os.path.exists(save_directory):
         os.mkdir(save_directory)
     
-    # download solution for each of them
+    # download solution for each problem code
     counter = 0 
     total = len(solvedProblemList)
     for code in solvedProblemList:
         counter += 1
-        print("Downloading " + str(counter) + "/" + str(total))
-        
+        print("Downloading " + str(counter) + "/" + str(total))   
         try:
-            link = getDownloadLinkForProblem(baseurl, br, username, code)
-            filename = save_directory + os.path.sep + code + ".cpp"
+            link, extension = getDownloadLinkForProblem(baseurl, br, username, code)
+            filename = save_directory + os.path.sep + code + extension
             downloadFile(br, link, filename)
         except:
             print("Could not download for code : " + str(code))
