@@ -16,12 +16,13 @@ A python tool to download your acccepted solutions of problems from various comp
 - Go to the main source folder and run following command:
  ```
  	python spoj-downloader.py
+  python codeforces-downloader.py
  ```
-- Enter you Spoj credentials.
-- Voila ! Your latest accepted solutions will be downloaded to ```{current_working_directory}/Spoj```.
+- Enter you Spoj/Codeforces credentials.
+- Voila ! Your latest accepted solutions will be downloaded in path_to_working_directory/{site_name}.
 
 ### To-do
-- Add support for more websites (Codechef, Codeforces etc)
+- Add support for more websites (Codechef, Hackerrank etc)
 - Add front-end tool
 - Create a webapp using flask
 - Make code more modular
