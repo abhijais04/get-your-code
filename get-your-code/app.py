@@ -10,7 +10,7 @@ def main():
         print("2 for Spoj")
 
         opt = int(raw_input())
-
+        
         if opt == 1:
             CodeforcesDownloader.downloadAllSolutions()
         elif opt == 2:
