@@ -87,7 +87,7 @@ class SpojDownloader(SiteDownloader):
                 lang = row.find('td', attrs={'class':'slang text-center'}).text
                 if status == "accepted":
                     res = "https://www.spoj.com/files/src/save/" + id + "/"
-                    extension = getExtension(lang)
+                    extension = self.getExtension(lang)
                     break
             if res == None:
                 raise Exception("Accepted solution not found for code: " + str(problemCode))

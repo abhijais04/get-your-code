@@ -93,7 +93,7 @@ class CodeforcesDownloder(SiteDownloader):
         if not os.path.exists(save_directory):
             os.mkdir(save_directory)
         # Save the source code in file
-        filename = save_directory + os.path.sep +  problemIndex + "-" + problemName + "." + getFileExtension(submissionLanguage)
+        filename = save_directory + os.path.sep +  problemIndex + "-" + problemName + "." + self.getFileExtension(submissionLanguage)
         if debug==1:
             print("Problem: " + str(contestId) + "-" + str(problemName))
         with open(filename, "w+") as f:
