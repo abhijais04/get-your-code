@@ -1,5 +1,5 @@
-import SpojDownloader
-import CodeforcesDownloader
+from SpojDownloader import SpojDownloader
+from CodeforcesDownloader import CodeforcesDownloder
 
 def main():
 
@@ -12,9 +12,14 @@ def main():
         opt = int(raw_input())
         
         if opt == 1:
-            CodeforcesDownloader.downloadAllSolutions()
+
+            cfd = CodeforcesDownloder()
+            cfd.downloadAllSolutions()
+            
         elif opt == 2:
-            SpojDownloader.downloadAllSolutions()
+            spjd = SpojDownloader()
+            spjd.downloadAllSolutions()
+        
         else:
             print("Invalid Option !!!")
         
