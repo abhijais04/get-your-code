@@ -121,9 +121,9 @@ class SpojDownloader(SiteDownloader):
             counter += 1
             print("Downloading " + str(counter) + "/" + str(total))   
             try:
-                link, extension = getDownloadLinkForProblem(baseurl, br, username, code)
+                link, extension = self.getDownloadLinkForProblem(baseurl, br, username, code)
                 filename = save_directory + os.path.sep + code + extension
-                downloadFile(br, link, filename)
+                self.downloadFile(br, link, filename)
             except:
                 print("Could not download for code : " + str(code))
 
