@@ -5,9 +5,13 @@ import traceback
 from BeautifulSoup import BeautifulSoup
 from getpass import getpass
 from HTMLParser import HTMLParser
+from SiteDownloader import SiteDownloader
 
 debug = 0
 contestNameDict = {}
+
+class CodeforcesDownloder(SiteDownloader):
+    pass
 
 
 def verifyCredentials(username):
@@ -131,7 +135,6 @@ def getAllAcceptedSubmissions(username):
 
 def downloadAllSolutions():
     try:
-
         username = raw_input("Enter usrename: ")
 
         # Check if given username is correct 
@@ -155,6 +158,7 @@ def downloadAllSolutions():
 
     except Exception as e:
         print(e)
+    
 
 
 downloadAllSolutions()

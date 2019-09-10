@@ -4,6 +4,12 @@ import urllib2
 import traceback
 from BeautifulSoup import BeautifulSoup
 from getpass import getpass
+from SiteDownloader import SiteDownloader
+
+
+class SpojDownloader(SiteDownloader):
+    pass
+
 
 def verfiyLogin(resp):
     if "Authentication failed" in str(resp):
