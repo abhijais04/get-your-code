@@ -133,7 +133,7 @@ class CodeforcesDownloder(SiteDownloader):
 
     def downloadAllSolutions(self):
         try:
-            username = raw_input("Enter usrename: ")
+            username = raw_input("Enter username: ")
 
             # Check if given username is correct 
             self.verifyCredentials(username)
