@@ -1,5 +1,4 @@
-from SpojDownloader import SpojDownloader
-from CodeforcesDownloader import CodeforcesDownloder
+from DownloadService import DownloadService
 
 def main():
 
@@ -9,19 +8,19 @@ def main():
         print("1 for Codeforces")
         print("2 for Spoj")
 
-        opt = int(raw_input())
         
-        if opt == 1:
-
-            cfd = CodeforcesDownloder()
-            cfd.downloadAllSolutions()
-            
-        elif opt == 2:
-            spjd = SpojDownloader()
-            spjd.downloadAllSolutions()
+        try:
+            opt = int(raw_input())
+        except ValueError:
+            print("Don't try anything studpid :) ")
+            continue
         
-        else:
-            print("Invalid Option !!!")
+        if opt > 2 or opt < 1:
+            print("You should read the options first :) ")
+            continue
+        
+        DownloadService.downloadSolutions(opt)
+        
 
 if __name__ == "__main__":
     main()

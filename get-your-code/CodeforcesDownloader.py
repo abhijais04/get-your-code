@@ -5,14 +5,18 @@ import traceback
 from BeautifulSoup import BeautifulSoup
 from getpass import getpass
 from HTMLParser import HTMLParser
-from SiteDownloader import SiteDownloader
 
-debug = 0
-contestNameDict = {}
+class CodeforcesDownloder():
 
-class CodeforcesDownloder(SiteDownloader):
+    contestNameCache = {}
+
+    def __init__(self):
+        
+        self.contestNameDict = self.contestNameCache
+    
 
     def verifyCredentials(self, username):
+        
         url = "https://codeforces.com/api/user.info?handles=" + str(username)
         resp = urllib2.urlopen(url).read()
         j = json.loads(resp)
@@ -21,9 +25,10 @@ class CodeforcesDownloder(SiteDownloader):
 
 
     def getContestName(self, contestId):
+        
         # Check in cache
-        if contestNameDict.get(contestId) != None:
-            return contestNameDict.get(contestId)
+        if self.contestNameDict.get(contestId) != None:
+            return self.contestNameDict.get(contestId)
         
         url = "http://codeforces.com/contest/" + str(contestId)
         
@@ -36,7 +41,7 @@ class CodeforcesDownloder(SiteDownloader):
         contestName = contestNameTable.find('th', attrs={'class':'left'}).text
         
         # store the name in cache to avoid re-calculation for same contest-Id
-        contestNameDict[str(contestId)] = str(contestName)
+        self.contestNameDict[str(contestId)] = str(contestName)
 
         return str(contestName)
 
@@ -85,21 +90,14 @@ class CodeforcesDownloder(SiteDownloader):
         h = HTMLParser()
         code = h.unescape(str(sourceCodeDiv.text))
         
-        if debug==1:
-            print("Problem: " + str(contestId) + "-" + str(problemName))
-        
         # Create folder according to contest name
         save_directory = code_directory + os.path.sep + str(contestName)
         if not os.path.exists(save_directory):
             os.mkdir(save_directory)
         # Save the source code in file
         filename = save_directory + os.path.sep +  problemIndex + "-" + problemName + "." + self.getFileExtension(submissionLanguage)
-        if debug==1:
-            print("Problem: " + str(contestId) + "-" + str(problemName))
         with open(filename, "w+") as f:
             f.write(str(code))
-        if debug==1:
-            print("Problem: " + str(contestId) + "-" + str(problemName))
         return
 
 
@@ -132,6 +130,7 @@ class CodeforcesDownloder(SiteDownloader):
 
 
     def downloadAllSolutions(self):
+        
         try:
             username = raw_input("Enter username: ")
 

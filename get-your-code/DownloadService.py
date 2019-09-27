@@ -1,16 +1,20 @@
+from SpojDownloader import SpojDownloader
+from CodeforcesDownloader import CodeforcesDownloder
 
+class DownloadService():
 
-class SiteDownloader:
+    @classmethod
+    def getDownloader(cls, siteNum):
+        if siteNum == 1:
+            return CodeforcesDownloder()
+        elif siteNum == 2:
+            return SpojDownloader()
     
-    def verifyCredentials(self):
-        pass
-        
-    
-    def getAllAcceptedSubmissions(self):
-        pass
-    
-    
-    def downloadAllSolutions(self):
-        pass
-    
+
+    @classmethod
+    def downloadSolutions(cls, siteNum):
+
+        downloaderObj = cls.getDownloader(siteNum)
+        downloaderObj.downloadAllSolutions()
+
 

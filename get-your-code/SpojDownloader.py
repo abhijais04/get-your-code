@@ -4,16 +4,19 @@ import urllib2
 import traceback
 from BeautifulSoup import BeautifulSoup
 from getpass import getpass
-from SiteDownloader import SiteDownloader
 
 
-class SpojDownloader(SiteDownloader):
+class SpojDownloader():
+    
     def verifyCredentials(self, resp):
+    
         if "Authentication failed" in str(resp):
             raise Exception("Login Failed")
         return 
 
+    
     def login(self, url, username, password):
+    
         try:
             b = Browser()
             b.open(url)
@@ -29,6 +32,7 @@ class SpojDownloader(SiteDownloader):
             raise 
         return b
 
+    
     def downloadFile(self, br, siteUrl, filename):
 
         try:
@@ -38,11 +42,15 @@ class SpojDownloader(SiteDownloader):
             traceback.print_exc()
             raise
 
+    
     def printObject(self, obj):
+    
         for att in dir(obj):
             print (att, getattr(obj,att))
 
+    
     def getExtension(self, lang):
+    
         if "cpp" in lang or "CPP" in lang:
             return ".cpp"
         if "java" in lang or "JAVA" in lang:
@@ -53,7 +61,9 @@ class SpojDownloader(SiteDownloader):
             return ".c"
         return ".txt"
 
+    
     def getSolvedProblemLinksOfUser(self, baseurl, username):
+    
         # Profile page for Spoj.com
         # https://www.spoj.com/users/{usrename}
         profileUrl = baseurl + "/users/" + username + "/"
@@ -98,6 +108,7 @@ class SpojDownloader(SiteDownloader):
 
 
     def downloadAllSolutions(self):
+    
         baseurl = "https://www.spoj.com"
         username = raw_input("Enter usrename: ")
         password = getpass()
