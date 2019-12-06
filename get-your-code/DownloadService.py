@@ -13,8 +13,10 @@ class DownloadService():
 
     @classmethod
     def downloadSolutions(cls, siteNum):
-
+        # Get a downloader object of the required website
         downloaderObj = cls.getDownloader(siteNum)
+
+        # Download all solutions
         downloaderObj.downloadAllSolutions()
 
 
