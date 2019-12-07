@@ -6,6 +6,7 @@ from BeautifulSoup import BeautifulSoup
 from getpass import getpass
 from HTMLParser import HTMLParser
 import logging
+import requests
 
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
@@ -28,18 +29,21 @@ class CodeforcesDownloder():
         
         try:
             # Send http request at the url
-            resp = urllib2.urlopen(url).read()
-
-            # parse response in json
-            j = json.loads(resp)
-
-            # Codeforces API will return status as "Failed" if the username is not registered
-            if str(j["status"]) == "FAILED":
-                logging.error("Username does not exists")
-                raise Exception("Username does not exists")
+            resp = requests.get(url)
+            
+            # Api will return status_Code as 400 in case of wrong username
+            if resp.status_code == 400:
+                logging.error("Username "+ str(username) +" does not exists")
+                raise Exception("Invalid Credentials")
+            
+            # Catch all other HTTP connection error
+            if resp.status_code != 200:
+                logging.error("HTTP Error while verifying credentials, returned status code: " + str(resp.status_code))
+                raise Exception("HTTP Error " + str(resp.status_code))
+            
         except Exception as e:
-            logging.error("Error occured while hitting the url:" + url)
             raise
+        
         logging.info("Username is Valid")
     
 
