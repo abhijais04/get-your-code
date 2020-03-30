@@ -1,10 +1,10 @@
 import os
 import json
-import urllib2
+from urllib.request import urlopen
 import traceback
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 from getpass import getpass
-from HTMLParser import HTMLParser
+from html.parser import HTMLParser
 import logging
 import requests
 
@@ -57,11 +57,11 @@ class CodeforcesDownloder():
         url = "http://codeforces.com/contest/" + str(contestId)
         
         # Open the contest page
-        resp = urllib2.urlopen(url)
+        resp = urlopen(url).read()
         html = BeautifulSoup(resp)
         
         # get contest Name from contest page
-        contestNameTable = html.body.find('table', attrs={'class':'rtable '})
+        contestNameTable = html.body.find('table', attrs={'class':'rtable'})
         contestName = contestNameTable.find('th', attrs={'class':'left'}).text
         
         # store the name in cache to avoid re-calculation for same contest-Id
@@ -97,13 +97,13 @@ class CodeforcesDownloder():
             contestId = str(row["problem"]["contestId"])
             problemIndex = str(row["problem"]["index"])
             submissionId = str(row["id"])
-            problemName = str(row["problem"]["name"].encode("utf-8")).replace(" ", "-")
+            problemName = str(row["problem"]["name"]).replace(" ", "-")
             submissionLanguage = row["programmingLanguage"]
             contestName = self.getContestName(contestId)
 
             # open submission page for the submission Id
             url = "http://codeforces.com/contest/"+str(contestId)+"/submission/"+str(submissionId)
-            resp = urllib2.urlopen(url)
+            resp = urlopen(url)
             html = BeautifulSoup(resp)
             
             logging.info("Problem: " + str(contestName) + "-" + str(problemName))
@@ -121,9 +121,9 @@ class CodeforcesDownloder():
             if not os.path.exists(save_directory):
                 logging.info("Creating Directory: " + save_directory)
                 os.mkdir(save_directory)
-            
+                
             # Save the source code in file
-            filename = save_directory + os.path.sep +  problemIndex + "-" + problemName + "." + self.getFileExtension(submissionLanguage)
+            filename = save_directory + os.path.sep +  problemIndex + "-" + problemName+ "." + self.getFileExtension(submissionLanguage)
             logging.info("Saving Source code in file:" + str(os.path.basename(filename)))
             with open(filename, "w+") as f:
                 f.write(str(code))
@@ -139,7 +139,7 @@ class CodeforcesDownloder():
         url = "https://codeforces.com/api/user.status?handle="+ str(username) + "&from=1"
         logging.info("Getting list of all solved problems...")
         try:
-            resp = urllib2.urlopen(url).read()
+            resp = urlopen(url).read()
             resp = json.loads(resp)
             rows = resp["result"]
             ans = []
@@ -172,12 +172,12 @@ class CodeforcesDownloder():
     def downloadAllSolutions(self):
         
         try:
-            username = raw_input("Enter username: ")
+            username = input("Enter username: ")
 
             # Check if given username is correct 
             self.verifyCredentials(username)
 
-            directory_name = raw_input("Enter Directory Name: ")
+            directory_name = input("Enter Directory Name: ")
             if not directory_name:
                 directory_name = "Codeforces-" + str(username)
             

@@ -10,14 +10,19 @@ def main():
         print("Enter from following options: ")
         print("1 for Codeforces")
         print("2 for Spoj")
+        print("3 for exit")
         
         try:
-            opt = int(raw_input())
+            opt = int(input())
         except ValueError as e:
             logging.error(e)
             print("Don't try anything studpid :) ")
             continue
         
+        if opt == 3:
+            print("Exiting Program, Bye !!")
+            break
+            
         if opt > 2 or opt < 1:
             logging.info("Wrong option selected!!")
             print("You should read the options first :) ")

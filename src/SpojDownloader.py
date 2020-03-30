@@ -1,8 +1,8 @@
 import os
-from mechanize import Browser
-import urllib2
+from mechanicalsoup import StatefulBrowser as Browser
+from urllib.request import urlopen
 import traceback
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 from getpass import getpass
 import logging
 
@@ -40,9 +40,8 @@ class SpojDownloader():
             b["password"] = password
 
             # Login with given credentials
-            b.submit()
-            response = b.response().read()
-            self.verifyCredentials(response)
+            response = b.submit_selected()
+            self.verifyCredentials(response.soup)
         except Exception as e:
             logging.error(e)
             raise Exception("Login Failed: Invalid Credentials")
@@ -58,7 +57,10 @@ class SpojDownloader():
         logging.info("Problem :" + str(problemName))
         logging.info("Downloading source code from:" + siteUrl + "into file:" + fileName)
         try:
-            br.retrieve(siteUrl,fileName)[0]
+            resp = br.session.get(siteUrl)
+            resp.raise_for_status()
+            with open(fileName, "w+") as f:
+                f.write(str(resp.content, 'utf-8'))
         except Exception as e:
             logging.error("Error while downloading file !!")
             logging.error(traceback.print_exc())
@@ -97,7 +99,7 @@ class SpojDownloader():
         profileUrl = baseurl + "/users/" + username + "/"
         try:
             # Open profile page
-            response = urllib2.urlopen(profileUrl)
+            response = urlopen(profileUrl)
             html = response.read()
             
             # create parse tree of response
@@ -131,8 +133,7 @@ class SpojDownloader():
         try:
             # Get ueer's submission history for problem 
             url = baseurl + "/status/" + str(problemCode) + "," + str(username) + "/"
-            html = br.open(url).read()
-            html = BeautifulSoup(html)
+            html = br.open(url).soup
             problemStatusTable = html.body.find('table', attrs={'class':'problems table newstatus'})
             rows = problemStatusTable.find('tbody').findAll('tr')
             res = None
@@ -143,7 +144,7 @@ class SpojDownloader():
                 lang = row.find('td', attrs={'class':'slang text-center'}).text
                 # Save the submission_id if the solution was correct
                 if status == "accepted":
-                    res = "https://www.spoj.com/files/src/save/" + id + "/"
+                    res = "https://www.spoj.com/files/src/save/" + str(id.strip()) + "/"
                     extension = self.getExtension(lang)
                     break
             if res == None:
@@ -163,7 +164,7 @@ class SpojDownloader():
         try:
             baseurl = "https://www.spoj.com"
             # Get username password
-            username = raw_input("Enter usrename: ")
+            username = input("Enter usrename: ")
             password = getpass()
                 
             # login with given usrname and password
@@ -188,6 +189,9 @@ class SpojDownloader():
                     link, extension = self.getDownloadLinkForProblem(baseurl, br, username, code)
                     filename = save_directory + os.path.sep + code + extension
                     self.downloadFile(br, link, filename)
+                except KeyboardInterrupt:
+                    logging.info("KeyboardInterrupt !! cancelling download")
+                    return 
                 except:
                     print("Could not download for code : " + str(code))
         except Exception as e:

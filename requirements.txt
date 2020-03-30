@@ -1,3 +1,5 @@
 mechanize
-urllib2
-BeautifulSoup
+HTMLParser
+beautifulsoup4
+requests
+MechanicalSoup
