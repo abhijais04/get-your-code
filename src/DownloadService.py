@@ -1,13 +1,14 @@
 from SpojDownloader import SpojDownloader
 from CodeforcesDownloader import CodeforcesDownloder
+from constants import Websites
 
 class DownloadService():
 
     @classmethod
     def getDownloader(cls, siteNum):
-        if siteNum == 1:
+        if Websites(siteNum) == Websites.CODEFORCES:
             return CodeforcesDownloder()
-        elif siteNum == 2:
+        elif Websites(siteNum) == Websites.SPOJ:
             return SpojDownloader()
     
 
