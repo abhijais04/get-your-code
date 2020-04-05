@@ -1,4 +1,4 @@
 HTMLParser
-beautifulsoup4
-requests
-MechanicalSoup
+beautifulsoup4 == 4.8.2
+requests == 2.23.0
+MechanicalSoup == 0.12.0
