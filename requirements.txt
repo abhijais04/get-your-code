@@ -1,4 +1,3 @@
-mechanize
 HTMLParser
 beautifulsoup4
 requests
