@@ -156,7 +156,7 @@ class SpojDownloader():
         return res, extension
 
 
-    def downloadAllSolutions(self):
+    def downloadAllSolutions(self, params):
         """ Get username, password as input
         downlaods source code for all the solved problems by user
         """
@@ -164,8 +164,8 @@ class SpojDownloader():
         try:
             baseurl = "https://www.spoj.com"
             # Get username password
-            username = input("Enter usrename: ")
-            password = getpass()
+            username = params.get("username")
+            password = params.get("password")
                 
             # login with given usrname and password
             br = self.login(baseurl, username, password)
@@ -174,7 +174,7 @@ class SpojDownloader():
             solvedProblemList = self.getSolvedProblemLinksOfUser(baseurl, username)
 
             # Path to save the code
-            save_directory = os.getcwd() + os.path.sep  + "Spoj"
+            save_directory = os.getcwd() + os.path.sep  + "Spoj-" + username 
             # Create directory if it's not there
             if not os.path.exists(save_directory):
                 os.mkdir(save_directory)
@@ -196,3 +196,4 @@ class SpojDownloader():
                     print("Could not download for code : " + str(code))
         except Exception as e:
             print(e)
+            raise

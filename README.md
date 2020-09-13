@@ -17,11 +17,11 @@ A python tool to download your acccepted solutions of problems from various comp
  ```
  	python app.py
  ```
-- A menu will appear in the command prompt. Enter options according to menu.
+- A server will start to run, now goto ay browser and open `localhost:5000/home`
+- A webpage will open with options for websites.
 - Enter your credentials for that website (username and/or password).
 - Voila ! Your latest accepted solutions for all the problems will be downloaded in directory ```path_to_working_directory/{site_name}```.
 
 ### To-do
 - Add support for more websites (Codechef, Hackerrank etc)
-- Add front-end tool
-- Create a webapp using flask
+- Front-end improvements
