@@ -24,4 +24,5 @@ A python tool to download your acccepted solutions of problems from various comp
 ### To-do
 - Add support for more websites (Codechef, Hackerrank etc)
 - Add front-end tool
+- Apply interfaces
 - Create a webapp using flask

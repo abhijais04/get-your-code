@@ -58,7 +58,7 @@ class CodeforcesDownloder():
         
         # Open the contest page
         resp = urlopen(url).read()
-        html = BeautifulSoup(resp)
+        html = BeautifulSoup(resp, "html.parser")
         
         # get contest Name from contest page
         contestNameTable = html.body.find('table', attrs={'class':'rtable'})
@@ -104,7 +104,7 @@ class CodeforcesDownloder():
             # open submission page for the submission Id
             url = "http://codeforces.com/contest/"+str(contestId)+"/submission/"+str(submissionId)
             resp = urlopen(url)
-            html = BeautifulSoup(resp)
+            html = BeautifulSoup(resp, "html.parser")
             
             logging.info("Problem: " + str(contestName) + "-" + str(problemName))
             # Extract the source code
@@ -169,18 +169,15 @@ class CodeforcesDownloder():
 
 
     # Download all the solutions for given user
-    def downloadAllSolutions(self):
+    def downloadAllSolutions(self, params):
         
         try:
-            username = input("Enter username: ")
+            username = params.get("username")
 
             # Check if given username is correct 
             self.verifyCredentials(username)
 
-            directory_name = input("Enter Directory Name: ")
-            if not directory_name:
-                directory_name = "Codeforces-" + str(username)
-            
+            directory_name = "codeforces-" + str(username)
             code_directory = os.getcwd() + os.path.sep + directory_name
             
             # Create directory if it's not there
@@ -198,5 +195,6 @@ class CodeforcesDownloder():
 
         except Exception as e:
             print(e)
+            raise
 
 
