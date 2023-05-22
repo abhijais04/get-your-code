@@ -1,5 +1,5 @@
 HTMLParser
 flask
 beautifulsoup4 == 4.8.2
-requests == 2.23.0
+requests == 2.31.0
 MechanicalSoup == 0.12.0
